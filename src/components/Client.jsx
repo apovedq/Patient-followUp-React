@@ -5,6 +5,7 @@ function Client({petName, ownerName, ownerPhone, ownerMail, date, hour, symptoms
     const handleDateValidation = () => {
         if (date && hour != undefined || "") {
             return `${date} at ${hour}`;
+            console.log("new")
         }
     }
     
