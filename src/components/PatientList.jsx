@@ -1,7 +1,17 @@
-import { useState } from "react"
+import { useEffect } from "react"
 import Client from "./Client"
 
-function PatientList({ patients }) {
+function PatientList({ patients, setPatient, handleDeletePatient }) {
+  
+  function createRandomIndex() {
+    // Create an array of characters to choose from
+    const randomNumber = Math.floor(Math.random() * 100000000);
+    return randomNumber
+  }
+
+  useEffect(() => {
+    console.log(patients)
+  }, [patients])
   
 
   return (
@@ -16,7 +26,7 @@ function PatientList({ patients }) {
 
         {
            patients ? patients.map((patient, index) => {
-            return <Client key={index} petName={patient.petName}
+            return <Client key={createRandomIndex()} petName={patient.petName}
               ownerName={patient.ownerName}
               ownerPhone={patient.ownerPhone}
               ownerMail={patient.ownerEmail}
@@ -24,6 +34,9 @@ function PatientList({ patients }) {
               hour={patient.hourReceived}
               symptoms={patient.symptoms}
               id={patient.id}
+              setPatient={setPatient}
+              patient={patient}
+              handleDeletePatient={handleDeletePatient}
             />
            }) : console.log("Nothing to show yet")
         }

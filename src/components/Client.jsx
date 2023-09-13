@@ -1,19 +1,22 @@
+import { useEffect } from "react";
 
-
-function Client({petName, ownerName, ownerPhone, ownerMail, date, hour, symptoms, id}) {
+function Client({petName, ownerName, ownerPhone, ownerMail, date, hour, symptoms, id, setPatient, patient, handleDeletePatient}) {
 
     const handleDateValidation = () => {
         if (date && hour != undefined || "") {
             return `${date} at ${hour}`;
-            console.log("new")
         }
     }
+
+    useEffect(() => {
+        
+    }, [])
     
   return (
       
       <section className="bg-white mx-10 mb-10 rounded-lg p-5 shadow-lg">
           <div className="bg-indigo-400 font-bold rounded-md p-5 text-white  ml-5 mt-5 w-1/2">
-              {id ? `ID: ${id}` : "No id registered!"}
+              <span className="bg-white p-2 text-indigo-600 mr-3 rounded-sm"> Patient ID</span> {id ? `${id}` : "No id registered!"}
           </div>
           <div className="flex flex-col lg:flex-row m-5">
               <p className="text-indigo-600 font-bold"></p>
@@ -49,8 +52,14 @@ function Client({petName, ownerName, ownerPhone, ownerMail, date, hour, symptoms
           </div> 
 
           <div className="justify-center flex flex-col items-center sm:flex-row space-around" >
-              <button className="bg-yellow-500 font-bold text-white px-5 py-3 rounded-md  mb-3 mx-5 w-1/3 hover:bg-yellow-600 transition-all"> Edit </button>  
-              <button className="bg-red-500 font-bold text-white px-5 py-3 rounded-md mb-3 mx-5 w-1/3 hover:bg-red-700 transition-all"> Delete</button>
+              <button className="bg-yellow-500 font-bold text-white px-5 py-3 rounded-md  mb-3 mx-5 w-1/3 hover:bg-yellow-600 transition-all"
+                  onClick={() => {
+                      //takes the current patient in order to later edit the content of
+                      //the especific patient on the main App.jsx
+                  setPatient(patient)
+              }}> Edit </button>  
+              <button className="bg-red-500 font-bold text-white px-5 py-3 rounded-md mb-3 mx-5 w-1/3 hover:bg-red-700 transition-all"
+                  onClick={() => handleDeletePatient(id)}> Delete</button>
           </div>
           
       </section>

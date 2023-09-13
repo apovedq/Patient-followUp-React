@@ -1,8 +1,8 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Error from "./error/Error"
 
 
-function Form({patients, setPatients}) {
+function Form({ patients, setPatients, patient, setPatient }) {
   
   const [petName, setPetName] = useState("");
   const [petAge, setPetAge] = useState("");
@@ -15,6 +15,23 @@ function Form({patients, setPatients}) {
   const [symptoms, setSymptoms] = useState("");
 
   const [errorMessage, setErrorMessage] = useState(false)
+
+
+  //Console logs everytime the patient state changes
+  useEffect(() => {
+    //Object.keys allows to check if there is anything inside
+    if (Object.keys(patient).length > 0) {
+      setPetName(patient.petName)
+      setPetAge(patient.petAge)
+      setOwnerName(patient.ownerName)
+      setOwnerEmail(patient.ownerEmail)
+    // setOwnerNumber(patient.ownerPhone)
+      setDateReceived(patient.dateReceived)
+      setHourReceived(patient.hourReceived)
+      setSymptoms(patient.symptoms)
+    } 
+  }, [patient])
+
 
   const handleEmptyFields = () => {
     setPetName("")
@@ -41,7 +58,7 @@ function Form({patients, setPatients}) {
     e.preventDefault();
 
     //Checks if values are empty
-    /*
+    
     if ([petName,
       petAge,
       ownerName,
@@ -54,7 +71,7 @@ function Form({patients, setPatients}) {
       console.error("There is some empty fields!")
       setErrorMessage(true)
       return;
-    }*/
+    }
     
     //In case it is properly filled
     setErrorMessage(false)
@@ -69,16 +86,33 @@ function Form({patients, setPatients}) {
       "dateReceived": dateReceived,
       "hourReceived": hourReceived,
       "symptoms": symptoms,
-      "id": generateId()
+  
     }
+
+    //Function to evaluate if is new patient or if it is editing
+    if (patient.id) {
+      //As the newPatient object comes without id then we assig the initial one from 
+      //the "patient" state that has the complete info of the current selected to edit patient
+      newPatient.id = patient.id
+
+      //Checks if the currenEditingPatient
+      const actualizedPatientList = patients.map(patientState => 
+        patientState.id === patient.id ? newPatient : patientState)
+      
+      setPatients(actualizedPatientList)
+
+      //Empty the state in order to not activate the if
+      setPatient({})
+    } else {
+
     //Asigns the new user to my setPatient hook from the main app
     // Gets the items from original array "patients" and add new user
-    setPatients([...patients, newPatient])
-
+      newPatient.id = generateId()
+      setPatients([...patients, newPatient])
+    }
 
     //Empty the hooks of the inputs
       handleEmptyFields()
-  
   }
  
   return (
@@ -214,8 +248,9 @@ function Form({patients, setPatients}) {
         
         <button className="bg-indigo-600 w-full p-5 mt-5 rounded-lg shadow-lg text-white font-bold items-center hover:bg-green-500 transition-all"
           type="submit"
-        onClick={handleFormSubmit}>
-          Submit
+          onClick={handleFormSubmit}>
+          {/* If patient id exist then Edit patient */}
+          {patient.id ? "Edit patient" : "Add patient"}
         </button>
         
       </form>
